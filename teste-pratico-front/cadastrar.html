@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enviar Formulário</title>
+</head>
+<body>
+    <h1>Cadastro de produtos</h1>
+    <form id="form_produtos">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" required><br><br>
+
+        <label for="descricao">Descrição:</label>
+        <input type="text" id="descricao" name="descricao" required><br><br>
+
+        <label for="preco">Preço:</label>
+        <input type="number" id="preco" name="preco" step="0.01" required><br><br>
+
+        <label for="disponivel">Disponível:</label>
+        <select id="disponivel" name="disponivel" required>
+            <option value="true">Sim</option>
+            <option value="false">Não</option>
+        </select><br><br>
+
+        <button type="submit">Enviar</button>
+    </form>
+
+    <script>
+        document.getElementById("form_produtos").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            const jsonData = {};
+            formData.forEach((value, key) => {
+                jsonData[key] = value;
+            });
+            // Configurar para o endpoint do back!!
+            fetch('http://localhost:8080/produtos/cadastro', {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(jsonData)
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+                document.getElementById("form_produtos").reset();
+                // Configurar para o endpoint do back!!
+                window.location.href = 'http://127.0.0.1:5500/lista.html';
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+            });
+        });
+    </script>
+</body>
+</html>
